@@ -22,12 +22,27 @@ const register = async(req, res) => {
     
     // response
     await newUser.save();
-    res.json( newUser );
+    res.status(202).json( newUser );
 }
 
 
-const login = (req, res) => {
-    res.json({"HOLA":"HOLA"})
+const login = async(req, res) => {
+    const { username, password } = req.body;
+    
+    // // checks username and password
+    const userFind = await User.findOne( { username } );
+    if ( !userFind ) {return res.status(404).json({msg: "Invalid username or password"})};
+    
+    const comparePassword = bcryptjs.compareSync(password, userFind.password)
+    if ( !comparePassword ) {return res.status(401).json({msg: "Invalid username or password"})}
+
+    // create token
+    const token = jwt.sign({ id: userFind._id }, process.env.SECRETORPRIVATEKEY, {
+        expiresIn: "4h"
+    });
+
+    // response token
+    res.json(token)
 }
 
 
