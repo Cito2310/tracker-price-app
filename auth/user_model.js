@@ -13,10 +13,10 @@ const UserSchema = Schema({
         type: String,
         require: [true, "The email is required"],
     },
-    // trackerElements: [{
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'Element',
-    // }]
+    trackerElements: [{
+        type: Schema.Types.ObjectId,
+        ref: 'TrackerElement',
+    }]
 });
 
 UserSchema.methods.toJSON = function() {

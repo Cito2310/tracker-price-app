@@ -4,8 +4,6 @@ const jwt = require('jsonwebtoken');
 
 const User = require("./user_model")
 
-// const token = jwt.sign({ foo: 'bar' }, privateKey, { algorithm: 'RS256'});
-
 // CONTROLLERS
 const register = async(req, res) => {
     const { username, password, email } = req.body;
@@ -42,7 +40,7 @@ const login = async(req, res) => {
     });
 
     // response token
-    res.json(token)
+    res.json({token})
 }
 
 

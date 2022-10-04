@@ -8,7 +8,7 @@ class Server {
         this.port = process.env.PORT;
         this.paths = {
             auth : "/api/auth",
-            // cars : "/api/carstracker",
+            cars : "/api/trackerCars",
         }
 
         this.middlewares();
@@ -18,6 +18,7 @@ class Server {
 
     routes() {
         this.app.use( this.paths.auth , require(__dirname + "/auth/auth_routes.js"));
+        this.app.use( this.paths.cars , require(__dirname + "/trackerCars/tracker_routes.js"));
     }
 
     async conectarDB() {
