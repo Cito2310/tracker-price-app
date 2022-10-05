@@ -4,7 +4,9 @@ const { check } = require("express-validator");
 const { checkFields, checkToken } = require("../helpers/checkFields");
 
 const {
-    postTrackerElement
+    postTrackerElement, 
+    getTrackerElementWithId,
+    deleteTrackerElement
 } = require("./tracker_controller");
 
 // ROUTES
@@ -18,6 +20,22 @@ router.post('/:id',[
 
     checkFields
 ], postTrackerElement);
+
+router.get('/:id',[
+    check("id", "Id is required").notEmpty(),
+    check("id", "Id is required").isMongoId(),
+
+    checkFields
+], getTrackerElementWithId);
+
+router.delete('/:id',[
+    check("id", "Id is required").notEmpty(),
+
+    check("token", "Token is required").notEmpty(),
+    checkToken,
+
+    checkFields
+], deleteTrackerElement);
 
 
 

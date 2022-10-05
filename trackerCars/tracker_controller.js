@@ -46,10 +46,58 @@ const postTrackerElement = async(req , res) => {
     ]);
 
     // response
+    await newTrackerElement.populate({
+        path: "creator",
+        select:["username", "email", "_id"]
+    })
+
     return res.json( newTrackerElement )
+}
+
+// get all tracker element of a user, need id user - public
+const getTrackerElementWithId = async(req, res) => {
+    const { id } = req.params;
+
+    // get user with id
+    const user = await User.findById(id)
+        .populate({
+            path: "trackerElements",
+            select: ["_id", "title", "price", "symbolPrice", "model", "km", "link"]
+        })
+
+    // check exist user
+    if ( !user ) {res.status(404).json({msg: "User not found"})}
+    
+    // response
+    res.json(user)
+}
+
+// delete one tracker element in user with id and token - private
+const deleteTrackerElement = async(req , res) => {
+    const user = req.USER;
+    const { id } = req.params;
+    
+    // check not exist this car in user
+    const existCarInUser = await TrackerElement.findOne({link: `https://auto.mercadolibre.com.ar/MLA-${id}`, creator: user._id })
+    if ( ! existCarInUser ) {return res.status(404).json({msg: "Car not found"})}
+
+    // remove element in array of user
+    user.trackerElements = user.trackerElements.filter(carID => !carID.equals( existCarInUser._id ));
+    
+    await Promise.all([
+        // save user
+        user.save(),
+        // delete car
+        TrackerElement.findOneAndDelete({link: `https://auto.mercadolibre.com.ar/MLA-${id}`, creator: user._id })
+    ])
+
+    // response
+    res.json(user)
 }
 
 // EXPORTS
 module.exports = {
-    postTrackerElement
+    postTrackerElement,
+    getTrackerElementWithId,
+    deleteTrackerElement
 }
