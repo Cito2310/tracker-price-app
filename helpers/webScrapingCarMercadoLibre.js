@@ -11,8 +11,10 @@ const webScrapingCarMercadoLibre = async(arrId = []) => {
             const body = await response.text();
             const { window: { document } } = new JSDOM(body);
 
+            // check exist page
+            if ( !document.querySelector('.ui-pdp-title') ) { return false }
 
-            //obtain data
+            // obtain data
             const title = document.querySelector('.ui-pdp-title').textContent; //Title
             const price = document.querySelector('.andes-money-amount__fraction').textContent; //Price
             const symbolPrice = document.querySelector('.andes-money-amount__currency-symbol').textContent; //Symbol Price

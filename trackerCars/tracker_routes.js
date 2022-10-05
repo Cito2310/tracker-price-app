@@ -10,7 +10,9 @@ const {
 // ROUTES
 const router = Router();
 
-router.post('/',[
+router.post('/:id',[
+    check("id", "Id is required").notEmpty(),
+
     check("token", "Token is required").notEmpty(),
     checkToken,
 
