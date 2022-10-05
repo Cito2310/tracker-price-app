@@ -9,6 +9,10 @@ const TrackerSchema = Schema({
         type: String,
         require: [true, "The password is required"],
     },
+    historyPrice: {
+        type: Array,
+        default: []
+    },
     symbolPrice: {
         type: String,
         require: [true, "The symbol price is required"],

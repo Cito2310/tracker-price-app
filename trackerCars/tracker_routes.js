@@ -6,7 +6,8 @@ const { checkFields, checkToken } = require("../helpers/checkFields");
 const {
     postTrackerElement, 
     getTrackerElementWithId,
-    deleteTrackerElement
+    deleteTrackerElement,
+    updateTrackerElement
 } = require("./tracker_controller");
 
 // ROUTES
@@ -21,12 +22,14 @@ router.post('/:id',[
     checkFields
 ], postTrackerElement);
 
+
 router.get('/:id',[
     check("id", "Id is required").notEmpty(),
     check("id", "Id is required").isMongoId(),
 
     checkFields
 ], getTrackerElementWithId);
+
 
 router.delete('/:id',[
     check("id", "Id is required").notEmpty(),
@@ -36,6 +39,16 @@ router.delete('/:id',[
 
     checkFields
 ], deleteTrackerElement);
+
+
+router.put('/:id',[
+    check("id", "Id is required").notEmpty(),
+
+    check("token", "Token is required").notEmpty(),
+    checkToken,
+
+    checkFields
+], updateTrackerElement);
 
 
 

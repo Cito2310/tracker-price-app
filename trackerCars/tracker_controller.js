@@ -95,9 +95,48 @@ const deleteTrackerElement = async(req , res) => {
     res.json(user)
 }
 
+// update one tracker element in user with id and token - private
+const updateTrackerElement = async(req , res) => {
+    const user = req.USER;
+    const { id } = req.params;
+
+    // check exist tracker element in user
+    const existTrackerElement = await TrackerElement.findOne({link: `https://auto.mercadolibre.com.ar/MLA-${id}`, creator: user._id });
+    if ( !existTrackerElement ) {return res.status(404).json({msg: "Not exist car in user"})}
+
+    // web scraping ml with id
+    const [ data ] = await webScrapingCarMercadoLibre([id]);
+
+    // check found car with this id
+    if ( !data ) {return res.status(404).json({msg: "Not found car with this id"})};
+
+    // update element
+    const { title, price, symbolPrice, km} = data;
+    const payload = {title, price, symbolPrice, km};
+    if (price !== existTrackerElement.price) {
+        payload.historyPrice === [...existTrackerElement.historyPrice, existTrackerElement.price ]
+    }
+
+    const newUpdateTrackerElement = await TrackerElement.findOneAndUpdate(
+        {link: `https://auto.mercadolibre.com.ar/MLA-${id}`, creator: user._id },
+        payload,
+        {new: true}
+    )
+    await newUpdateTrackerElement.save(),
+
+    // response
+    await newUpdateTrackerElement.populate({
+        path: "creator",
+        select:["username", "email", "_id"]
+    })
+
+    return res.json( newUpdateTrackerElement )
+}
+
 // EXPORTS
 module.exports = {
     postTrackerElement,
     getTrackerElementWithId,
-    deleteTrackerElement
+    deleteTrackerElement,
+    updateTrackerElement,
 }
