@@ -9,6 +9,7 @@ class Server {
         this.paths = {
             auth : "/api/auth",
             cars : "/api/trackerCars",
+            user : "/api/user",
         }
 
         this.middlewares();
@@ -19,6 +20,7 @@ class Server {
     routes() {
         this.app.use( this.paths.auth , require(__dirname + "/auth/auth_routes.js"));
         this.app.use( this.paths.cars , require(__dirname + "/trackerCars/tracker_routes.js"));
+        this.app.use( this.paths.user , require(__dirname + "/auth/user_routes.js"));
     }
 
     async conectarDB() {

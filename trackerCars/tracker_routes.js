@@ -50,7 +50,5 @@ router.put('/:id',[
     checkFields
 ], updateTrackerElement);
 
-
-
     
 module.exports = router

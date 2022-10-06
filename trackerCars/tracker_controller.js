@@ -1,7 +1,4 @@
 // // IMPORTS
-// const bcryptjs = require("bcryptjs");
-// const jwt = require('jsonwebtoken');
-
 const { webScrapingCarMercadoLibre } = require("../helpers/webScrapingCarMercadoLibre");
 const TrackerElement = require("./tracker_model");
 const User = require("../auth/user_model")
