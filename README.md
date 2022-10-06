@@ -62,6 +62,12 @@ Esta es una ruta que actualizara el elemento que se coloque en el ID_USER.
 
 ***
 
+### put /api/trackerCars/
+Esta es una ruta que actualizara todos los elementos del usuario en el token.  
+- Es necesario pasar el *token* del usuario por el *header*.  
+
+***
+
 ### delete /api/trackerCars/:ID_USER
 Esta es una ruta que elimiara el elemento que se coloque en el ID_USER.  
 - Es necesario pasar el *token* del usuario por el *header*.  

@@ -130,10 +130,44 @@ const updateTrackerElement = async(req , res) => {
     return res.json( newUpdateTrackerElement )
 }
 
+// update multiple trackers elements in user with id and token - private
+const updateMultipleTrackerElement = async(req , res) => {
+    // const user = req.USER.populate({path: "trackerElements"});
+    const user = req.USER;
+    await user.populate({path: "trackerElements", select:["link", "price", "historyPrice"]})
+
+    // check exist tracker element in user
+    const arrId = user.trackerElements.map(element => element.link.split("-")[1])
+    
+    // web scraping ml with id
+    let data = await webScrapingCarMercadoLibre( arrId );
+
+    // check data equal price
+
+    data.forEach((car, index) => {
+        data[index].historyPrice = user.trackerElements[index].historyPrice;
+
+        (car.price !== user.trackerElements[index].price)
+        ? data[index].historyPrice.push( car.price )
+        : null
+    })
+    
+    // update element
+    const promiseExistElement = arrId.map( (id, index) => TrackerElement.findOneAndUpdate(
+        {link: `https://auto.mercadolibre.com.ar/MLA-${id}`, creator: user._id }, 
+        data[index], 
+        {new: true}
+    ));
+    const existElement = await Promise.all(promiseExistElement);
+            
+    return res.json(existElement)
+}
+
 // EXPORTS
 module.exports = {
     postTrackerElement,
     getTrackerElementWithId,
     deleteTrackerElement,
     updateTrackerElement,
+    updateMultipleTrackerElement
 }

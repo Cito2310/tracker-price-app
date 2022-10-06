@@ -7,7 +7,8 @@ const {
     postTrackerElement, 
     getTrackerElementWithId,
     deleteTrackerElement,
-    updateTrackerElement
+    updateTrackerElement,
+    updateMultipleTrackerElement
 } = require("./tracker_controller");
 
 // ROUTES
@@ -49,6 +50,13 @@ router.put('/:id',[
 
     checkFields
 ], updateTrackerElement);
+
+router.put('/',[
+    check("token", "Token is required").notEmpty(),
+    checkToken,
+
+    checkFields
+], updateMultipleTrackerElement);
 
     
 module.exports = router
